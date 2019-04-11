@@ -318,7 +318,13 @@ _.map = function( collection, func) {
 *   }); -> [[2,4],[1,3,5]]
 }
 */
-
+_.partition = function(array, func) {
+    
+    var filtered = _.filter(array, func);
+    var rejected = _.reject(array, func);
+    
+    return [filtered, rejected];
+}
 
 /** _.every
 * Arguments:
@@ -342,30 +348,30 @@ _.map = function( collection, func) {
 */
 _.every = function(collection, test) {
     // plant
-    var result = true;
+    var toReturn = true;
     
     if (test === undefined) {
-        _.each(collection, function(value, i, collection) {
-        // test each value
-        if (!value) {
+        test = function(value) {
+            return value ? true : false;
             //return early if found
-            result = false;
+            
         }
-    });
     }
     
+    
     // water
-    _.each(collection, function(value, i, collection) {
+    _.each(collection, function(value, loc, collection) {
         // test each value
-        if (test(value, i, collection) === false) {
+        var result =test(value,loc,collection);
+        if (result === false) {
             //return early if found
-            result = false;
+            toReturn = false;
         }
     });
     
     //harvest
     //return negative if end of loop is reached
-    return result;
+    return toReturn;
 }
 
 
@@ -393,7 +399,7 @@ _.every = function(collection, test) {
 _.some = function(collection, test) {
     var result = true;
     
-    _.some(collection, function(value, i, collection) {
+    _.each(collection, function(value, i, collection) {
         // test each value
         if (test(value, i, collection) === false) {
             //return early if found
